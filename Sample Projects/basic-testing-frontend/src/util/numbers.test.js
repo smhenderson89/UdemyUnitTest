@@ -1,34 +1,59 @@
-import { it, expect } from 'vitest';
-import { transformToNumber } from './numbers';
+import { describe, it, expect } from 'vitest';
+import { cleanedNumbers, cleanNumbers, transformToNumber } from './numbers';
 
 // Tests
 // Should convert number string to number
 // Should pass a number as a number
 
-it('should convert number string to number', () => {
-  const inputs = '1';
+describe('transformToNumber()', () => {
+  it('should convert number string to number', () => {
+    const inputs = '1';
 
-  const results = transformToNumber(inputs);
+    const results = transformToNumber(inputs);
 
-  const expectedResult = parseInt(inputs);
+    const expectedResult = parseInt(inputs);
 
-  expect(results).toBe(expectedResult).toBeTypeOf('number');
+    expect(results).toBe(expectedResult).toBeTypeOf('number');
+  })
+
+  it('should pass a number as a number', () => {
+    const inputs = 5;
+
+    const results = inputs;
+
+    const expectedResult = inputs;
+
+    expect (results).toBe(expectedResult);
+  })
+
+  it('should yield NaN for non-transformable values', () => {
+    const input = 'invalid';
+
+    const result = transformToNumber(input);
+
+    expect(result).toBeNaN;
+  })
 })
 
-it('should pass a number as a number', () => {
-  const inputs = 5;
+// Intergration testing
+// Making sure the total functions work all together and doesn't break
+describe('cleanNumbers()', () => {
+  it('should return an array of number values if an array of string number values is provided', () => {
+    const numberValues = ['1', '2'];
 
-  const results = inputs;
+    const cleanedNumbers = cleanNumbers(numberValues);
 
-  const expectedResult = inputs;
+    // expect(cleanedNumbers[0]).toBeTypeOf('number');
+    expect(cleanedNumbers).toEqual([1, 2]); // toBe()
+  });
 
-  expect (results).toBe(expectedResult);
-})
+  // Check will throw an error if not valid inputs are entered
+  it('should throw an error if an array with at least one empty string is provided', () => {
+    const numberValues = ['', 1];
 
-it('should yield NaN for non-transformable values', () => {
-  const input = 'invalid';
+    const cleanFn = () => cleanNumbers(numberValues);
 
-  const result = transformToNumber(input);
-
-  expect(result).toBeNaN;
+    expect(cleanFn).toThrow();
+  }
+  )
 })
